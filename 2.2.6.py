@@ -1,35 +1,25 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-import math
-
-
-def calc(x):
-    return str(math.log(abs(12 * math.sin(int(x)))))
+import os
 
 
 try:
-    link = "https://SunInJuly.github.io/execute_script.html"
+    link = "http://suninjuly.github.io/file_input.html"
     browser = webdriver.Chrome()
     browser.get(link)
 
-    x_element = browser.find_element(By.ID, "input_value")
-    x = x_element.text
-    y = calc(x)
-    y_element = browser.find_element(By.ID, "answer")
-    y_element.send_keys(y)
+    browser.find_element(By.CSS_SELECTOR, "input.form-control[name='firstname']").send_keys("Anastasiya")
+    browser.find_element(By.CSS_SELECTOR, "input.form-control[name='lastname']").send_keys("Begunova")
+    browser.find_element(By.CSS_SELECTOR, "input.form-control[name='email']").send_keys("ABmail@mail.ru")
 
-    button = browser.find_element(By.CSS_SELECTOR, "button[type='submit']")
-    browser.execute_script("return arguments[0].scrollIntoView(true);", button)
+    current_dir = os.path.abspath(os.path.dirname(__file__))  # получаем путь к директории текущего исполняемого файла
+    # загружаемый файл должен находится в одной директории с исполняемым файлом
+    file_path = os.path.join(current_dir, 'file.txt')  # добавляем к этому пути имя файла
+    browser.find_element(By.ID, "file").send_keys(file_path)  # находим кнопку для добавления файла и добавляем файл
 
-    option1 = browser.find_element(By.ID, "robotCheckbox")
-    option1.click()
-
-    option2 = browser.find_element(By.ID, "robotsRule")
-    option2.click()
-
-    button.click()
+    browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
 finally:
-    time.sleep(6)
+    time.sleep(10)
     browser.quit()
